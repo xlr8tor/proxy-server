@@ -3,29 +3,20 @@ import cors from "cors";
 import { FormData } from "formdata-node";
 import fetch from "node-fetch";
 import config from "./config.js";
-import { fileURLToPath } from "url";
-import path from "path";
+import helmet from "helmet";
+import xss from "xss-clean";
 
 const { client_id, redirect_uri, client_secret } = config;
 const app = express();
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
+app.set("trust proxy", 1);
 //middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+app.use(helmet());
+app.use(xss());
 app.use(cors());
-
-app.use(express.static(path.join(__dirname, "./frontend/build")));
-
-app.get("*", (_, res) => {
-  res.sendFile(path.join(__dirname, "./frontend/build/index.html"), (err) => {
-    if (err) {
-      res.status(500).send(err);
-    }
-  });
-});
 
 app.get("/", (req, res) => {
   res.send("Proxy server");
