@@ -42,6 +42,7 @@ app.post("/authenticate", (req, res) => {
       let params = new URLSearchParams(paramsString);
       console.log(params, "params");
       access_token = params.get("access_token");
+      console.log(access_token, "token");
       // Request to return data of a user that has been authenticated
       return fetch(`https://api.github.com/user`, {
         headers: {
